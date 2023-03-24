@@ -5,11 +5,17 @@ let readyToLoadMoreImages = false;
 let imagesLoaded = 0;
 let incomingImages = 0;
 let photosArray = [];
-let firstLoad = true;
+let isInitialLoad = true;
 
-const count = 5;
-const apiKey = "_n9_8GRMeo68U1hT6PQqx2pA9ShV9ja-LmrBH6v-1Wo"; //TODO: How to hide this key?
-const apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
+const initialCount = 5;
+const apiKey = "_n9_8GRMeo68U1hT6PQqx2pA9ShV9ja-LmrBH6v-1Wo";
+let apiUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${initialCount}`;
+console.log("apiUrl: ", apiUrl);
+
+function updateAPIURLWithNewCount(picCount) {
+  apiUrl = `https://api.unsplash.com/photos/random?client_id=${apiKey}&count=${picCount}`;
+  console.log("apiUrl: ", apiUrl);
+}
 
 function areAllImagesLoaded() {
   imagesLoaded++;
@@ -55,6 +61,12 @@ async function getPhotos() {
     const response = await fetch(apiUrl);
     photosArray = await response.json();
     displayPhotos();
+    console.log("isInitialLoad: ", isInitialLoad);
+    if (isInitialLoad) {
+      updateAPIURLWithNewCount(30);
+      isInitialLoad = false;
+      console.log("isInitialLoad: ", isInitialLoad);
+    }
   } catch (error) {
     console.log(error);
   }
